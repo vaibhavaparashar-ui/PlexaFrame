@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "package": "com.vaibhavparashar.plexaframe.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BlockEntityRendererMixin",
+    "WorldRendererMixin",
+    "BufferBuilderMixin",
+    "ParticleManagerMixin",
+    "TextureAtlasSpriteMixin",
+    "FluidRendererMixin",
+    "LevelChunkMixin",
+    "ParticleEngineMixin"
+  ],
+  "common": [
+    "GoalSelectorMixin",
+    "SectionPosMixin",
+    "WorldChunkMixin",
+    "ChunkRendererRegionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

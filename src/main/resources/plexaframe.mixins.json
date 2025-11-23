@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.vaibhavparashar.plexaframe.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [],
+  "common": [
+    "GoalSelectorMixin", 
+    "SectionPosMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

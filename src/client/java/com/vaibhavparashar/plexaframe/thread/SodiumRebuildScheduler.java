@@ -6,8 +6,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SodiumRebuildScheduler {
 
-    private static final ConcurrentLinkedQueue<ChunkRenderContainer> queue = new ConcurrentLinkedQueue<>();
+    private static final SodiumRebuildWorker[] workers = new SodiumRebuildWorker[4];
 
+static {
+    for (int i = 0; i < workers.length; i++) {
+        workers[i] = new SodiumRebuildWorker();
+        workers[i].setName("Plexa-Rebuild-" + i);
+        workers[i].start();
+    }
+}
     public static void submit(ChunkRenderContainer container) {
         queue.offer(container);
     }

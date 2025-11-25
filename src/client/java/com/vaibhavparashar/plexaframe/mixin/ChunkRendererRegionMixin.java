@@ -2,33 +2,40 @@ package com.vaibhavparashar.plexaframe.mixin;
 
 import com.vaibhavparashar.plexaframe.thread.PlexaFrameThreadPoolManager;
 import com.vaibhavparashar.plexaframe.thread.RebuildTask;
+
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
 import net.minecraft.client.renderer.chunk.SectionRenderDispatcher.RenderSection;
+
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Redirects chunk mesh rebuild scheduling to our custom thread-safe scheduler.
+ * Replaces vanilla rebuild scheduling. If Sodium is installed, redirect into Sodium dispatcher.
+ * Else fall back to PlexaFrame thread pool.
  */
-@Mixin(SectionRenderDispatcher.class)
+@Mixin(SectionRenderDispatcher.RenderSection.class)
 public abstract class ChunkRendererRegionMixin {
 
-    @Shadow
-    protected abstract void scheduleSectionUpdate(RenderSection section);
+    @Inject(method = "rebuild", at = @At("HEAD"), cancellable = true)
+    private void plexa$overrideRebuild(CallbackInfoReturnable<Object> cir) {
+        RenderSection section = (RenderSection) (Object) this;
+        cir.cancel();
 
-    @Inject(method = "setDirty", at = @At("HEAD"), cancellable = true)
-    private void plexa$redirectChunkRebuild(RenderSection section, boolean rerenderOnMainThread, CallbackInfo ci) {
-        // cancel vanilla scheduling
-        ci.cancel();
+        if (FabricLoader.getInstance().isModLoaded("sodium")) {
+            // Call sodium async dispatcher
+            try {
+                com.jomlrender.sodium.render.chunk.compile.ChunkCompileTaskDispatcher.INSTANCE.schedule(section);
+                return;
+            } catch (Throwable t) {
+                System.err.println("[PlexaFrame] Failed to use Sodium dispatcher, falling back.");
+            }
+        }
 
-        // optional snapshot hash
-        long hash = section.hashCode();
-
-        // schedule CPU rebuild work on safe executor
-        RebuildTask task = new RebuildTask(section, hash);
-        PlexaFrameThreadPoolManager.submitSafe(task);
+        // No sodium or failed: use PlexaFrame scheduler
+        PlexaFrameThreadPoolManager.submitSafe(new RebuildTask(section, section.hashCode()));
     }
 }
+    

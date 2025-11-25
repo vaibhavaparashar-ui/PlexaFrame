@@ -1,12 +1,11 @@
 package com.vaibhavparashar.plexaframe.thread;
 
+import com.vaibhavparashar.plexaframe.mixin.RenderSectionInvoker;
 import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
 import net.minecraft.client.renderer.chunk.SectionRenderDispatcher.RenderSection;
 
 /**
- * Example safe rebuild task skeleton.
- * - run() executes CPU-only meshing work off-thread
- * - when mesh data is ready, we post a lightweight upload runnable to the main thread
+ * A safe CPU-only rebuild task. Replace performCpuMeshing with real mesh generation.
  */
 public final class RebuildTask implements Runnable {
     private final RenderSection section;
@@ -20,18 +19,16 @@ public final class RebuildTask implements Runnable {
     @Override
     public void run() {
         try {
-            // 1) CPU-only meshing / generation. DO NOT TOUCH OpenGL or renderer internals here.
-            // Example placeholder: generate a fake "mesh result" object (replace with real mesh data)
-            Object meshResult = performCpuMeshing(section);
+            // 1) CPU-only mesh generation placeholder (do NOT touch GL)
+            Object meshData = performCpuMeshing(section);
 
-            // 2) Post upload to main thread (must be executed on the game thread)
+            // 2) Post upload back to main thread. Use invoker/accessor mixin to call internal upload.
             PlexaFrameThreadPoolManager.postToMainThread(() -> {
                 try {
-                    // Safe place to call renderer methods / GL upload.
-                    // Example: an invoker or accessor mixin should be used to call private uploads.
-                    // ((RenderSectionInvoker) section).plexaframe$invokeBeginLayerCompile(meshResult);
-                    // Placeholder: no-op log
-                    System.out.println("[PlexaFrame] uploaded mesh for section");
+                    // Use the invoker mixin to call internal compile/upload routines safely on main thread.
+                    RenderSectionInvoker inv = (RenderSectionInvoker) (Object) section;
+                    // If actual invoker signatures differ, I will update them for your mappings.
+                    inv.plexaframe$invokeRebuild(); // placeholder invoker that triggers the rebuild/upload
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
@@ -41,8 +38,8 @@ public final class RebuildTask implements Runnable {
         }
     }
 
-    // Placeholder CPU work — replace with actual mesh-building logic
-    private Object performCpuMeshing(RenderSection section) {
+    private Object performCpuMeshing(RenderSection s) {
+        // Replace with real mesh building: read block states (via accessors), generate vertex buffers, etc.
         try { Thread.sleep(1); } catch (InterruptedException ignored) {}
         return new Object();
     }

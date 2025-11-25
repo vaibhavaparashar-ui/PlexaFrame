@@ -1,26 +1,28 @@
 package com.vaibhavparashar.plexaframe.frustum;
 
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
 
-public class FrustumChecker {
+/** Lightweight frustum + distance checker. */
+public final class FrustumChecker {
+    private static Frustum current = null;
+    private static final double MAX_DIST_SQ = 160 * 160;
 
-    public static Frustum currentFrustum;
-    public static double cameraX, cameraY, cameraZ;
-
-    public static void updateFrustum(Frustum frustum) {
-        currentFrustum = frustum;
-    }
+    public static void update(Frustum fr) { current = fr; }
 
     public static boolean shouldSkip(BlockPos pos) {
-        if (currentFrustum == null) return false;
-
-        // Build AABB using explicit coordinates — mappings require doubles rather than BlockPos
-        double x1 = pos.getX();
-        double y1 = pos.getY();
-        double z1 = pos.getZ();
-        AABB box = new AABB(x1, y1, z1, x1 + 16.0, y1 + 16.0, z1 + 16.0);
-        return !currentFrustum.isVisible(box);
+        if (current != null) {
+            AABB box = new AABB(
+                pos.getX(), pos.getY(), pos.getZ(),
+                pos.getX() + 16, pos.getY() + 16, pos.getZ() + 16
+            );
+            if (!current.isVisible(box)) return true;
+        }
+        var mc = Minecraft.getInstance();
+        if (mc == null || mc.player == null) return false;
+        double d = mc.player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ());
+        return d > MAX_DIST_SQ;
     }
 }

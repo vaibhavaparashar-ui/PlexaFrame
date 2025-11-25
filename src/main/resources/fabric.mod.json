@@ -18,9 +18,10 @@
     "main": [
       "com.vaibhavparashar.plexaframe.PlexaFrame"
     ],
-    "client": [
-      "com.vaibhavparashar.plexaframe.PlexaFrameClient"
-    ]
+  "client": [
+    "com.vaibhavparashar.plexaframe.mixin.ChunkRendererRegionMixin",
+    "com.vaibhavparashar.plexaframe.mixin.CameraUpdateMixin"
+]
   },
   "mixins": [
     "plexaframe.mixins.json",

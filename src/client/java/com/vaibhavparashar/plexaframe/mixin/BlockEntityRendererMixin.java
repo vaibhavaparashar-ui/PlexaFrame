@@ -12,9 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockEntityRendererMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    public void skipFarOrHidden(BlockEntity blockEntity, float tickDelta, CallbackInfo ci) {
-        if (FrustumChecker.shouldSkip(blockEntity.getBlockPos())) {
-            ci.cancel();
-        }
+    private void plexa$skipFar(BlockEntity blockEntity, float tickDelta, CallbackInfo ci) {
+        if (FrustumChecker.shouldSkip(blockEntity.getBlockPos())) ci.cancel();
     }
 }

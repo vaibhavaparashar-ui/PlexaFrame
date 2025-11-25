@@ -8,7 +8,7 @@ public class DebugLogger {
     public static void log() {
         System.out.println(
                 "[PlexaFrame Debug] Queue: " + RebuildScheduler.queued() +
-                        " | Threads: " + PlexaFrameThreadPoolManager.getActiveThreads()
+                                " | Threads: " + PlexaFrameThreadPoolManager.getActiveCount()
         );
     }
 }

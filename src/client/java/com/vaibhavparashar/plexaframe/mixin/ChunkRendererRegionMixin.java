@@ -1,25 +1,34 @@
 package com.vaibhavparashar.plexaframe.mixin;
 
-import net.fabricmc.loader.api.FabricLoader;
+import com.vaibhavparashar.plexaframe.thread.PlexaFrameThreadPoolManager;
+import com.vaibhavparashar.plexaframe.thread.RebuildTask;
 import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
+import net.minecraft.client.renderer.chunk.SectionRenderDispatcher.RenderSection;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(SectionRenderDispatcher.RenderSection.class)
+/**
+ * Redirects chunk mesh rebuild scheduling to our custom thread-safe scheduler.
+ */
+@Mixin(SectionRenderDispatcher.class)
 public abstract class ChunkRendererRegionMixin {
 
-    @Inject(method = "rebuild", at = @At("HEAD"), cancellable = true)
-    private void plexaframe$redirectToThreadPool(CallbackInfoReturnable<Object> cir) {
+    @Shadow
+    protected abstract void scheduleSectionUpdate(RenderSection section);
 
-        if (FabricLoader.getInstance().isModLoaded("sodium")) {
-            return; // Sodium controls rebuilds → do not interfere
-        }
+    @Inject(method = "setDirty", at = @At("HEAD"), cancellable = true)
+    private void plexa$redirectChunkRebuild(RenderSection section, boolean rerenderOnMainThread, CallbackInfo ci) {
+        // cancel vanilla scheduling
+        ci.cancel();
 
-        cir.cancel(); // cancel vanilla rebuild
+        // optional snapshot hash
+        long hash = section.hashCode();
 
-        Object section = this;
-        com.vaibhavparashar.plexaframe.thread.PlexaFrameThreadPoolManager.submitRebuildTask(section);
+        // schedule CPU rebuild work on safe executor
+        RebuildTask task = new RebuildTask(section, hash);
+        PlexaFrameThreadPoolManager.submitSafe(task);
     }
 }

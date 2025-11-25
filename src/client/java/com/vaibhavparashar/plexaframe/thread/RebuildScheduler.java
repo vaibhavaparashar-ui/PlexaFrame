@@ -1,25 +1,29 @@
 package com.vaibhavparashar.plexaframe.thread;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.chunk.RenderSection;
+import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
+import net.minecraft.client.renderer.chunk.SectionRenderDispatcher.RenderSection;
+import com.vaibhavparashar.plexaframe.mixin.accessor.RenderSectionAccessor;
 
-import java.util.Comparator;
 import java.util.PriorityQueue;
 
+/**
+ * Schedules chunk rebuild tasks with a distance-based priority queue.
+ */
 public class RebuildScheduler {
 
     private static final PriorityQueue<RenderSection> QUEUE = new PriorityQueue<>(
-            Comparator.comparingDouble(s -> Minecraft.getInstance().player.distanceToSqr(
-                    s.getOrigin().getX(), s.getOrigin().getY(), s.getOrigin().getZ()
-            ))
+                    (a, b) -> Double.compare(
+                        ((RenderSectionAccessor) a).getOrigin().distToCenterSqr(0.0, 0.0, 0.0),
+                        ((RenderSectionAccessor) b).getOrigin().distToCenterSqr(0.0, 0.0, 0.0)
+                    )
     );
 
     public static synchronized void enqueue(RenderSection section, long hash) {
         QUEUE.add(section);
-        PlexaFrameThreadPoolManager.submit(new RebuildTask(section, hash));
+        PlexaFrameThreadPoolManager.submitSafe(new RebuildTask(section, hash));
     }
 
-    public static int queued() {
+    public static synchronized int queued() {
         return QUEUE.size();
     }
 }

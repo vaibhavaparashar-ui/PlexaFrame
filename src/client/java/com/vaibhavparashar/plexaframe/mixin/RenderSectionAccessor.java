@@ -10,5 +10,5 @@ public interface RenderSectionAccessor {
 
     // Get world-space block position of this section (used for threading/range culling)
     @Accessor("origin")
-    BlockPos plexaframe$getOrigin();
+    BlockPos getOrigin();
 }

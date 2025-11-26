@@ -1,29 +1,27 @@
 package com.vaibhavparashar.plexaframe.thread;
 
-import me.jellysquid.mods.sodium.client.render.chunk.ChunkRenderContainer;
+import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SodiumRebuildScheduler {
 
-    private static final SodiumRebuildWorker[] workers = new SodiumRebuildWorker[4];
+    private static final ConcurrentLinkedQueue<RenderSection> queue = new ConcurrentLinkedQueue<>();
+    private static final ExecutorService workers =
+            Executors.newFixedThreadPool(Math.max(2, Runtime.getRuntime().availableProcessors() - 1));
 
-static {
-    for (int i = 0; i < workers.length; i++) {
-        workers[i] = new SodiumRebuildWorker();
-        workers[i].setName("Plexa-Rebuild-" + i);
-        workers[i].start();
-    }
-}
-    public static void submit(ChunkRenderContainer container) {
-        queue.offer(container);
+    public static void submit(RenderSection section) {
+        queue.add(section);
+        workers.submit(() -> process(section));
     }
 
-    public static ChunkRenderContainer poll() {
-        return queue.poll();
-    }
-
-    public static int size() {
-        return queue.size();
+    private static void process(RenderSection section) {
+        try {
+            section.rebuild();
+        } catch (Exception ex) {
+            System.err.println("[PlexaFrame] Rebuild fail: " + ex.getMessage());
+        }
     }
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "plexaframe",
-  "version": "${version}",
+  "version": "1.0.0",
   "name": "PlexaFrame",
   "description": "A client-side Fabric mod focused on improving rendering performance in Minecraft 1.21.1 and boosting frame rates.",
   "authors": [
@@ -11,22 +11,21 @@
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/vaibhavaparashar-ui/PlexaFrame"
   },
-  "license": "GNU LESSER GENERAL PUBLIC LICENSE",
+  "license": "LGPL-3.0",
   "icon": "assets/plexaframe/icon.png",
   "environment": "client",
   "entrypoints": {
     "main": [
       "com.vaibhavparashar.plexaframe.PlexaFrame"
     ],
-  "client": [
-    "com.vaibhavparashar.plexaframe.mixin.ChunkRendererRegionMixin",
-    "com.vaibhavparashar.plexaframe.mixin.CameraUpdateMixin"
-]
+    "client": [
+      "com.vaibhavparashar.plexaframe.PlexaClient"
+    ]
   },
-  "mixins": [
-    "plexaframe.mixins.json",
-    "plexaframe.client.mixins.json"
-  ],
+  "mixins": {
+    "common": "plexaframe.mixins.json",
+    "client": "plexaframe.client.mixins.json"
+  },
   "depends": {
     "fabricloader": ">=0.15.0",
     "minecraft": ">=1.21.1",

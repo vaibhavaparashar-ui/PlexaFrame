@@ -1,20 +1,26 @@
 package com.vaibhavparashar.plexaframe.thread;
 
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class RenderUploadQueue {
+/** Enqueue rebuilds that need final main-thread upload. */
+public final class RenderUploadQueue {
+    private static final ConcurrentLinkedQueue<Object> UPLOADS = new ConcurrentLinkedQueue<>();
 
-    private static final ConcurrentLinkedQueue<RenderSection> uploadQueue = new ConcurrentLinkedQueue<>();
-
-    public static void enqueue(RenderSection section) {
-        uploadQueue.add(section);
+    public static void enqueue(Object section) {
+        if (section == null) return;
+        UPLOADS.add(section);
     }
 
     public static void flushUploads() {
-        RenderSection section;
-        while ((section = uploadQueue.poll()) != null) {
-            section.uploadMeshes();
+        Object s;
+        while ((s = UPLOADS.poll()) != null) {
+            try {
+                // try to call common upload method names
+                boolean done = ReflectionUtils.tryInvokeAny(s, "upload", "uploadMesh", "uploadMeshes", "finishUpload", "finishRebuild");
+                if (!done) ReflectionUtils.tryInvoke(s, "rebuild");
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
         }
     }
 }

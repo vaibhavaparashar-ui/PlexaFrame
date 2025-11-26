@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/** Small safe thread pool for CPU-only rebuild work. */
 public final class PlexaFrameThreadPoolManager {
     private static final int DEFAULT_WORKERS = 1;
     private static final boolean SAFE_MODE = Boolean.parseBoolean(System.getProperty("plexaframe.safeMode", "true"));
@@ -26,7 +27,7 @@ public final class PlexaFrameThreadPoolManager {
 
     private PlexaFrameThreadPoolManager() {}
 
-    /** Submit CPU-only work (safe). */
+    /** Submit CPU-only work. Must NOT touch OpenGL. */
     public static void submitSafe(Runnable r) {
         if (r == null) return;
         try {
@@ -34,11 +35,12 @@ public final class PlexaFrameThreadPoolManager {
                 try { r.run(); } catch (Throwable t) { t.printStackTrace(); }
             });
         } catch (RejectedExecutionException ex) {
+            // fallback: run on main thread
             postToMainThread(r);
         }
     }
 
-    /** Post runnable onto Minecraft main thread (for GPU/upload). */
+    /** Post GL/upload work to run on the Minecraft main thread. */
     public static void postToMainThread(Runnable r) {
         if (r == null) return;
         try {

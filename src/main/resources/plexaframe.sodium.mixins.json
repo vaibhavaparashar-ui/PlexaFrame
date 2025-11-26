@@ -1,9 +1,9 @@
 {
   "required": true,
-  "package": "com.vaibhavparashar.plexaframe.mixin",
+  "package": "com.vaibhavparashar.plexaframe.mixin.sodium",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "CameraUpdateMixin"
+    "SodiumRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

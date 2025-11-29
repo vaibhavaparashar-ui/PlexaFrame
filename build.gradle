@@ -6,18 +6,36 @@ plugins {
 group = "com.vaibhavparashar"
 version = "1.0.0"
 
+base {
+    archivesName = "PlexaFrame"
+}
+
 repositories {
     mavenCentral()
-    maven { url = "https://maven.fabricmc.net" }
+    maven { url = "https://maven.fabricmc.net/" }
+    maven { url = "https://api.modrinth.com/maven" }
+}
+
+ext {
+    minecraft_version = "1.21.1"
+    yarn_mappings = "1.21.1+build.3"
+    loader_version = "0.16.9"
+    fabric_api_version = "0.102.1+1.21.1"
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.21.1"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:0.15.11"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.102.0+1.21.1"
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
 }

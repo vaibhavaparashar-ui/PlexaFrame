@@ -6,7 +6,10 @@
     "SodiumRenderMixin",
     "ChunkRendererMixin",
     "CameraMixin",
-    "WorldRendererMixin"
+    "WorldRendererMixin",
+    "ParticleManagerMixin",
+    "EntityRenderMixin",
+    "LivingEntityMixin"
   ],
   "mixins": [
     "SectionPosMixin"

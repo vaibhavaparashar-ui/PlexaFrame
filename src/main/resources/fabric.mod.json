@@ -3,20 +3,22 @@
   "id": "plexaframe",
   "version": "1.0.0",
   "name": "PlexaFrame",
-  "description": "Performance & Optimization Mod",
-  "authors": ["Vaibhav Parashar"],
-  "contact": {},
+  "description": "PlexaFrame - performance tweaks (entity culling, particle reduction, skip death animations).",
+  "authors": [
+    "Vaibhavparashar"
+  ],
   "license": "MIT",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      "com.vaibhavparashar.plexaframe.PlexaFrame"
+    "client": [
+      "com.vaibhavparashar.plexaframe.PlexaClient"
     ]
   },
-  "mixins": [],
+  "mixins": [
+    "plexaframe.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.16.9",
-    "minecraft": ">=1.21",
-    "java": ">=17"
+    "minecraft": "1.21.1"
   }
 }

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LevelChunkMixin {
 
     // Target the method responsible for setting a block state, where light updates are often triggered.
-    @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunk;onSectionChange(Lnet/minecraft/core/SectionPos;)V", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunk;onSectionChange(Lnet/minecraft/util/math/ChunkSectionPos;)V", shift = At.Shift.BEFORE), cancellable = true)
     private void plexaframe$skipRedundantLightUpdates(CallbackInfoReturnable<BlockState> ci) {
         
         // Logic to check if the light level actually changed and cancel the update if redundant (Conceptual)

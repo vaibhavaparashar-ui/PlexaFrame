@@ -3,9 +3,12 @@
   "package": "com.vaibhavparashar.plexaframe.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "CameraUpdateMixin"
+    "SodiumRenderMixin",
+    "ChunkRendererMixin",
+    "CameraMixin",
+    "WorldRendererMixin"
   ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+  "mixins": [
+    "SectionPosMixin"
+  ]
 }

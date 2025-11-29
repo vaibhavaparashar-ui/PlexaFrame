@@ -3,33 +3,20 @@
   "id": "plexaframe",
   "version": "1.0.0",
   "name": "PlexaFrame",
-  "description": "A client-side Fabric mod focused on improving rendering performance in Minecraft 1.21.1 and boosting frame rates.",
-  "authors": [
-    "Vaibhavparashar"
-  ],
-  "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/vaibhavaparashar-ui/PlexaFrame"
-  },
-  "license": "LGPL-3.0",
-  "icon": "assets/plexaframe/icon.png",
-  "environment": "client",
+  "description": "Performance & Optimization Mod",
+  "authors": ["Vaibhav Parashar"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
   "entrypoints": {
     "main": [
       "com.vaibhavparashar.plexaframe.PlexaFrame"
-    ],
-    "client": [
-      "com.vaibhavparashar.plexaframe.PlexaClient"
     ]
   },
-  "mixins": {
-    "common": "plexaframe.mixins.json",
-    "client": "plexaframe.client.mixins.json"
-  },
+  "mixins": [],
   "depends": {
-    "fabricloader": ">=0.15.0",
-    "minecraft": ">=1.21.1",
-    "java": ">=21",
-    "fabric-api": "*"
+    "fabricloader": ">=0.16.9",
+    "minecraft": ">=1.21",
+    "java": ">=17"
   }
 }

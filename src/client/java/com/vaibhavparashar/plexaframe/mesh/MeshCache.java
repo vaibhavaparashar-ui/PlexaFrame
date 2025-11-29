@@ -1,6 +1,6 @@
 package com.vaibhavparashar.plexaframe.mesh;
 
-import net.minecraft.core.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 

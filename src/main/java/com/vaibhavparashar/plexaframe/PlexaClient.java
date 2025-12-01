@@ -18,4 +18,7 @@ public class PlexaClient implements ClientModInitializer {
         PlexaConfig.load(); // load defaults (in-memory minimal config)
         PlexaClientTickHandler.register();
     }
+    public void onInitialize() {
+        System.out.println("PlexaFrame FPS Boost Loaded!");
+    }
 }

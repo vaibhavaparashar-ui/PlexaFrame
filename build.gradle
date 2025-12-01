@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6.12'
+    id 'fabric-loom' version '1.7.2'
     id 'java'
 }
 
@@ -14,12 +14,13 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:1.21.1"
     mappings "net.fabricmc:yarn:1.21.1+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.15.11"
+    modImplementation "net.fabricmc:fabric-loader:0.16.9"
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.102.0+1.21.1"
 
     // FPS Boost Mods
-    modImplementation "maven.modrinth:sodium:mc1.21-0.5.11"
-    modImplementation "maven.modrinth:ferrite-core:6.0.3-fabric"
+    modImplementation "maven.modrinth:ferrite-core:7.0.2-fabric"
+    modImplementation "maven.modrinth:sodium:mc1.21.1-0.6.0-fabric"
+    modImplementation "maven.modrinth:sodium-extra:mc1.21.1-0.6.0-beta.3+fabric"
 }
 
 java {

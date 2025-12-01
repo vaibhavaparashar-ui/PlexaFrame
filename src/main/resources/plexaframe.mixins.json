@@ -6,12 +6,21 @@
     "SodiumRenderMixin",
     "ChunkRendererMixin",
     "CameraMixin",
-    "WorldRendererMixin",
-    "ParticleManagerMixin",
-    "EntityRenderMixin",
-    "LivingEntityMixin"
+    "WorldRendererMixin"
   ],
   "mixins": [
-    "SectionPosMixin"
-  ]
+    "DisableCloudsMixin",
+    "DisableParticlesMixin",
+    "BetterTickMixin",
+    "EntityRenderLimitMixin",
+    "LivingEntityMixin",
+    "EntityRenderMixin",
+    "ParticleManagerMixin",
+    "CloudRendererMixin",
+    "LeavesMixin"
+    
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

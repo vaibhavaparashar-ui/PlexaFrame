@@ -14,11 +14,11 @@ public class PlexaClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        LOGGER.info("PlexaFrame initialized — PlexaBoost (PlexaFrame) active.");
-        PlexaConfig.load(); // load defaults (in-memory minimal config)
+        LOGGER.info("PlexaFrame initialized — PlexaBoost active.");
+        PlexaConfig.FPS_BOOST_ENABLED = true;
         PlexaClientTickHandler.register();
     }
-    public void onInitialize() {
+    public  void onInitialize() {
         System.out.println("PlexaFrame FPS Boost Loaded!");
     }
 }
